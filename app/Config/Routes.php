@@ -28,3 +28,16 @@ $routes->post('admin/register', 'AdminController::createAdmin');
 $routes->get('admin/login', 'AdminController::login');
 $routes->post('admin/login', 'AdminController::authenticate');
 $routes->get('admin/logout', 'AdminController::logout');
+$routes->get('admin/dashboard', 'AdminController::dashboard');
+
+$routes->get('admin/users', 'AdminController::users');
+$routes->get('admin/users/delete/(:segment)', 'AdminController::deleteUser/$1');
+
+$routes->get('admin/content', 'AdminController::content');
+$routes->post('admin/content/update', 'AdminController::updateContent');
+
+$routes->group('admin', ['filter' => 'authCheck'], function($routes) {
+    $routes->get('dashboard', 'AdminController::dashboard');
+    $routes->get('users', 'AdminController::users');
+    $routes->get('content', 'AdminController::content');
+});
