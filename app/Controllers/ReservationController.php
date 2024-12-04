@@ -59,6 +59,9 @@ class ReservationController extends BaseController
             echo 'Tarih: ' . $reservation->date . '<br>';
             echo 'Saat: ' . $reservation->time . '<br>';
             echo 'Kişi Sayısı: ' . $reservation->guests . '<br><br>';
+
+            return view('reservation_list', ['reservations' => $reservations]);
+
         }
     }
     public function update($id)

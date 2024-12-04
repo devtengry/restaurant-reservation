@@ -15,3 +15,4 @@ $routes->get('reservation/form', function () {
     echo view('reservation_form');
 });
 $routes->post('reservation/create', 'ReservationController::create');
+$routes->get('reservation/list', 'ReservationController::index');
