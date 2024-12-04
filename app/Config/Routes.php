@@ -5,8 +5,11 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-$routes->get('/', 'Home::index');
-$routes->get('home/testURL', 'Home::testURL');
+//$routes->get('/', 'Home::index');
+$routes->get('/', function() {
+    return view('home');
+});
+
 $routes->get('reservation/create', 'ReservationController::create');
 $routes->get('reservation', 'ReservationController::index');
 $routes->get('reservation/update/(:segment)', 'ReservationController::update/$1');
@@ -16,3 +19,9 @@ $routes->get('reservation/form', function () {
 });
 $routes->post('reservation/create', 'ReservationController::create');
 $routes->get('reservation/list', 'ReservationController::index');
+
+$routes->get('admin/register', 'AdminController::register');
+$routes->post('admin/register', 'AdminController::createAdmin');
+$routes->get('admin/login', 'AdminController::login');
+$routes->post('admin/login', 'AdminController::authenticate');
+$routes->get('admin/logout', 'AdminController::logout');

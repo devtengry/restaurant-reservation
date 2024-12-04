@@ -6,6 +6,20 @@ use Config\MongoDB;
 
 class ReservationController extends BaseController
 {
+    public function index()
+    {
+        if (!session()->get('isAdmin')) {
+            return redirect()->to('/admin/login');
+        }
+
+        $db = \Config\MongoDB::connect();
+        $collection = $db->reservations;
+        $reservations = $collection->find()->toArray();
+
+        return view('reservation_list', ['reservations' => $reservations]);
+    }
+
+
     public function create()
     {
         $validation = \Config\Services::validation();
@@ -45,25 +59,6 @@ class ReservationController extends BaseController
         ]);
     }
 
-    public function index()
-    {
-        $db = MongoDB::connect();
-        $collection = $db->reservations;
-
-        $reservations = $collection->find()->toArray();
-
-        foreach ($reservations as $reservation) {
-            echo 'ID: ' . (string)$reservation->_id . '<br>';
-            echo 'İsim: ' . $reservation->name . '<br>';
-            echo 'Telefon: ' . $reservation->phone . '<br>';
-            echo 'Tarih: ' . $reservation->date . '<br>';
-            echo 'Saat: ' . $reservation->time . '<br>';
-            echo 'Kişi Sayısı: ' . $reservation->guests . '<br><br>';
-
-            return view('reservation_list', ['reservations' => $reservations]);
-
-        }
-    }
     public function update($id)
     {
         $db = MongoDB::connect();
@@ -102,6 +97,11 @@ class ReservationController extends BaseController
         } catch (\Exception $e) {
             echo 'Bir hata oluştu: ' . $e->getMessage();
         }
+        return $this->response->setJSON([
+            'status' => 'success',
+            'message' => 'Rezervasyon silindi!'
+        ]);
+
     }
 
 
