@@ -18,12 +18,13 @@ class AdminController extends Controller
         $data = [
             'username' => $this->request->getPost('username'),
             'email'    => $this->request->getPost('email'),
-            'password' => password_hash($this->request->getPost('password'), PASSWORD_BCRYPT)
+            'password' => password_hash($this->request->getPost('password'), PASSWORD_BCRYPT) // Güvenli şifreleme
         ];
 
         $collection->insertOne($data);
-        return redirect()->to('/admin/login');
+        return redirect()->to('/admin/login')->with('success', 'Kayıt başarılı! Giriş yapabilirsiniz.');
     }
+
 
     public function login()
     {
@@ -37,19 +38,34 @@ class AdminController extends Controller
 
         $username = $this->request->getPost('username');
         $password = $this->request->getPost('password');
+
+        // Kullanıcı adı eşleşen bir admin arıyoruz
         $admin = $collection->findOne(['username' => $username]);
 
-        if ($admin && password_verify($password, $admin->password)) {
-            session()->set('isAdmin', true);
-            return redirect()->to('/reservation/list');
+        if ($admin) {
+            // Şifre doğrulaması
+            if (password_verify($password, $admin->password)) {
+                // Başarılı giriş
+                session()->set([
+                    'isAdmin' => true,
+                    'adminUsername' => $admin->username,
+                    'loggedIn' => true
+                ]);
+                return redirect()->to('/reservation/list');
+            } else {
+                return redirect()->back()->with('error', 'Yanlış şifre!');
+            }
+        } else {
+            return redirect()->back()->with('error', 'Kullanıcı bulunamadı!');
         }
-
-        return redirect()->back()->with('error', 'Geçersiz giriş bilgileri!');
     }
+
+
 
     public function logout()
     {
-        session()->destroy();
-        return redirect()->to('/');
+        session()->destroy(); // Tüm oturum verilerini temizler
+        return redirect()->to('/admin');
     }
+
 }

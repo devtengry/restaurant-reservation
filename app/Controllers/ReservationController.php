@@ -9,7 +9,7 @@ class ReservationController extends BaseController
     public function index()
     {
         if (!session()->get('isAdmin')) {
-            return redirect()->to('/admin/login');
+            return redirect()->to('/admin/login')->with('error', 'Bu sayfaya erişmek için giriş yapmalısınız.');
         }
 
         $db = \Config\MongoDB::connect();
@@ -18,6 +18,7 @@ class ReservationController extends BaseController
 
         return view('reservation_list', ['reservations' => $reservations]);
     }
+
 
 
     public function create()

@@ -9,6 +9,14 @@
 <body>
 <div class="container mt-5">
     <h1 class="mb-4 text-center">Admin Giriş</h1>
+
+    <!-- Hata mesajlarını gösteren PHP kodu buraya eklenir -->
+    <?php if (session()->getFlashdata('error')): ?>
+        <div class="alert alert-danger">
+            <?= session()->getFlashdata('error'); ?>
+        </div>
+    <?php endif; ?>
+
     <form action="/admin/login" method="post" class="p-4 border rounded bg-white shadow-sm">
         <div class="mb-3">
             <label for="username" class="form-label">Kullanıcı Adı</label>

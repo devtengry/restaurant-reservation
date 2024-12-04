@@ -9,6 +9,9 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', function() {
     return view('home');
 });
+$routes->get('admin', function() {
+    return view('admin_portal');
+});
 
 $routes->get('reservation/create', 'ReservationController::create');
 $routes->get('reservation', 'ReservationController::index');

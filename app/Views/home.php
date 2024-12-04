@@ -41,7 +41,7 @@
                     <a class="nav-link" href="/reservation/list">Rezervasyon Takip Et</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin/login">Admin Panel</a>
+                    <a class="nav-link" href="/admin">Yönetici Misiniz?</a>
                 </li>
             </ul>
         </div>
