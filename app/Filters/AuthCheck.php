@@ -1,5 +1,5 @@
 <?php
-
+// Filters/AuthCheck.php
 namespace App\Filters;
 
 use CodeIgniter\HTTP\RequestInterface;
@@ -11,34 +11,23 @@ class AuthCheck implements FilterInterface
     public function before(RequestInterface $request, $arguments = null)
     {
         $session = session();
-        $cookie = $request->getCookie('admin_session');
 
-        if (!$session->get('loggedIn')) {
-            $cookie = $request->getCookie('admin_session');
-            if ($cookie) {
-                $data = json_decode($cookie, true);
-                if ($data && $data['loggedIn']) {
-                    $session->set([
-                        'isAdmin' => true,
-                        'adminUsername' => $data['username'],
-                        'loggedIn' => true
-                    ]);
-                } else {
-                    return redirect()->to('/admin/login')->with('error', 'Oturumunuz sona erdi, lütfen yeniden giriş yapın.');
-                }
-            } else {
-                return redirect()->to('/admin/login')->with('error', 'Lütfen giriş yapın.');
+        if ($session->has('lastActivity')) {
+            $timeout = 300; // 5 dakika
+            $elapsedTime = time() - $session->get('lastActivity');
+
+            if ($elapsedTime > $timeout) {
+                $session->destroy();
+                return redirect()->to('/login')->with('error', 'Oturum süresi doldu.');
             }
         }
 
-
-        if (!$session->get('loggedIn')) {
-            return redirect()->to('/admin/login');
-        }
+        // Oturum süresini güncelle
+        $session->set('lastActivity', time());
     }
 
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)
     {
-        // İşlem sonrası herhangi bir şey yok
+        // Gerekirse bir işlem yapabilirsiniz.
     }
 }

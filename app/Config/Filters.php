@@ -25,16 +25,16 @@ class Filters extends BaseFilters
      * or [filter_name => [classname1, classname2, ...]]
      */
     public array $aliases = [
-        'csrf'          => CSRF::class,
-        'toolbar'       => DebugToolbar::class,
-        'honeypot'      => Honeypot::class,
+        'csrf'       => \CodeIgniter\Filters\CSRF::class,
+        'toolbar'    => \CodeIgniter\Filters\DebugToolbar::class,
+        'honeypot'   => \CodeIgniter\Filters\Honeypot::class,
         'invalidchars'  => InvalidChars::class,
         'secureheaders' => SecureHeaders::class,
         'cors'          => Cors::class,
         'forcehttps'    => ForceHTTPS::class,
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
-        'authCheck' => \App\Filters\AuthCheck::class,  // Eklenen middleware
+        'authcheck'  => \App\Filters\AuthCheck::class, // Filtreyi burada tanımlıyoruz
 
     ];
 
@@ -71,13 +71,11 @@ class Filters extends BaseFilters
      */
     public array $globals = [
         'before' => [
-            // 'honeypot',
-            // 'csrf',
-            // 'invalidchars',
+            'csrf',
+            'authcheck' => ['except' => ['login', 'register', '/']], // "authcheck" filtresini aktif hale getiriyoruz
         ],
         'after' => [
-            // 'honeypot',
-            // 'secureheaders',
+            'toolbar',
         ],
     ];
 

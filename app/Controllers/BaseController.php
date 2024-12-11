@@ -55,4 +55,30 @@ abstract class BaseController extends Controller
 
         // E.g.: $this->session = \Config\Services::session();
     }
+    // Controllers/BaseController.php
+
+    public function __construct()
+    {
+        helper(['url', 'session']);
+        $this->checkSessionTimeout();
+    }
+
+    private function checkSessionTimeout()
+    {
+        $session = session();
+
+        if ($session->has('lastActivity')) {
+            $timeout = 300; // 5 dakika
+            $elapsedTime = time() - $session->get('lastActivity');
+
+            if ($elapsedTime > $timeout) {
+                $session->destroy(); // Oturumu sonlandır
+                return redirect()->to('/login')->with('error', 'Oturum süreniz doldu.');
+            }
+        }
+
+        // Oturum süresini güncelle
+        $session->set('lastActivity', time());
+    }
+
 }

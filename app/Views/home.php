@@ -38,9 +38,6 @@
                     <a class="nav-link" href="/reservation/form">Rezervasyon Yap</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/reservation/list">Rezervasyon Takip Et</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" href="/admin">Yönetici Misiniz?</a>
                 </li>
             </ul>
