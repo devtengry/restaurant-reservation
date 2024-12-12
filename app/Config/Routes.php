@@ -13,16 +13,18 @@ $routes->get('/', function () {
 $routes->get('admin', function () {
     return view('admin/portal');
 });
+$routes->get('reservation/list', 'ReservationController::index');
 
 $routes->get('reservation/create', 'ReservationController::create');
 $routes->post('reservation/create', 'ReservationController::create');
+$routes->get('reservation/delete/(:segment)', 'ReservationController::delete/$1');
+
 $routes->get('reservation', 'ReservationController::index');
 $routes->get('reservation/update/(:segment)', 'ReservationController::update/$1');
 $routes->get('reservation/delete/(:segment)', 'ReservationController::delete/$1');
 $routes->get('reservation/form', function () {
     return view('reservation/form');
 });
-$routes->get('reservation/list', 'ReservationController::index');
 
 $routes->get('admin/register', 'AdminController::register');
 $routes->post('admin/register', 'AdminController::createAdmin');

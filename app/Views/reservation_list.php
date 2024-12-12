@@ -23,7 +23,7 @@
         </thead>
         <tbody>
         <?php foreach ($reservations as $reservation): ?>
-            <tr>
+            <tr id="reservation-<?= (string)$reservation->_id ?>">
                 <td><?= (string)$reservation->_id ?></td>
                 <td><?= $reservation->name ?></td>
                 <td><?= $reservation->phone ?></td>
@@ -31,8 +31,8 @@
                 <td><?= $reservation->time ?></td>
                 <td><?= $reservation->guests ?></td>
                 <td>
-                    <a href="/reservation/update/<?= (string)$reservation->_id ?>" class="btn btn-warning btn-sm">Düzenle</a>
-                    <a href="/reservation/delete/<?= (string)$reservation->_id ?>" class="btn btn-danger btn-sm" onclick="return confirm('Bu rezervasyonu silmek istediğinizden emin misiniz?');">Sil</a>
+                    <a href="#" class="btn btn-warning btn-sm">Düzenle</a>
+                    <button class="btn btn-danger btn-sm delete-reservation" data-id="<?= (string)$reservation->_id ?>">Sil</button>
                 </td>
             </tr>
         <?php endforeach; ?>
@@ -40,5 +40,36 @@
     </table>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Silme butonuna tıklandığında AJAX ile işlem yap
+        $('.delete-reservation').click(function (e) {
+            e.preventDefault();  // Sayfa yenilenmesin
+
+            var reservationId = $(this).data('id');
+
+            // Kullanıcıdan onay al
+            if (confirm('Bu rezervasyonu silmek istediğinizden emin misiniz?')) {
+                $.ajax({
+                    url: '/reservation/delete/' + reservationId,
+                    type: 'GET',
+                    success: function (response) {
+                        // Silme işlemi başarılıysa, satırı kaldır
+                        if (response.status === 'success') {
+                            $('#reservation-' + reservationId).remove();
+                            alert(response.message);
+                        } else {
+                            alert('Silme işlemi başarısız oldu!');
+                        }
+                    },
+                    error: function () {
+                        alert('Bir hata oluştu!');
+                    }
+                });
+            }
+        });
+    });
+</script>
 </body>
 </html>

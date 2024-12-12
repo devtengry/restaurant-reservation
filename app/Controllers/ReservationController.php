@@ -19,8 +19,6 @@ class ReservationController extends BaseController
         return view('reservation_list', ['reservations' => $reservations]);
     }
 
-
-
     public function create()
     {
         $validation = \Config\Services::validation();
@@ -53,12 +51,42 @@ class ReservationController extends BaseController
 
         $result = $collection->insertOne($newReservation);
 
+        // Yönlendirme yapılmaz, sadece JSON döndürülür
         return $this->response->setJSON([
             'status'  => 'success',
             'message' => 'Rezervasyon başarıyla oluşturuldu!',
             'id'      => (string)$result->getInsertedId()
         ]);
     }
+
+    public function delete($id)
+    {
+        try {
+            $db = MongoDB::connect();
+            $collection = $db->reservations;
+
+            $result = $collection->deleteOne(['_id' => new \MongoDB\BSON\ObjectId($id)]);
+
+            if ($result->getDeletedCount() > 0) {
+                return $this->response->setJSON([
+                    'status' => 'success',
+                    'message' => 'Rezervasyon başarıyla silindi!'
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'status' => 'error',
+                    'message' => 'Silme işlemi başarısız oldu!'
+                ]);
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Bir hata oluştu: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+
 
     public function update($id)
     {
@@ -82,29 +110,6 @@ class ReservationController extends BaseController
             echo 'Güncelleme başarısız!';
         }
     }
-    public function delete($id)
-    {
-        try {
-            $db = MongoDB::connect();
-            $collection = $db->reservations;
-
-            $result = $collection->deleteOne(['_id' => new \MongoDB\BSON\ObjectId($id)]);
-
-            if ($result->getDeletedCount() > 0) {
-                echo 'Rezervasyon silindi!';
-            } else {
-                echo 'Silme işlemi başarısız!';
-            }
-        } catch (\Exception $e) {
-            echo 'Bir hata oluştu: ' . $e->getMessage();
-        }
-        return $this->response->setJSON([
-            'status' => 'success',
-            'message' => 'Rezervasyon silindi!'
-        ]);
-
-    }
-
 
 
 }
