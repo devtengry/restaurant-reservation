@@ -51,3 +51,6 @@ $routes->group('admin', ['filter' => 'authCheck'], function ($routes) {
     $routes->get('users', 'AdminController::users'); // Authenticated access to user management
     $routes->get('content', 'AdminController::content'); // Authenticated access to content management
 });
+$routes->get('login', function() {
+    return redirect()->to('/admin/login'); // Kullanıcıyı admin login sayfasına yönlendir
+});

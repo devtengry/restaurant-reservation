@@ -96,8 +96,11 @@ class AdminController extends Controller
     {
         session()->destroy();
         $this->response->deleteCookie('admin_session');
+
+        // Varsayılan admin login sayfasına yönlendir
         return redirect()->to('/admin/login')->with('success', 'Başarıyla çıkış yaptınız.');
     }
+
 
     public function dashboard()
     {
